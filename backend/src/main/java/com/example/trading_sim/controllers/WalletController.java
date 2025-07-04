@@ -1,74 +1,75 @@
 package com.example.trading_sim.controllers;
 
-import com.example.trading_sim.models.User;
-import com.example.trading_sim.repositories.UserRepository;
+import com.example.trading_sim.models.Wallet;
+import com.example.trading_sim.services.WalletService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/users")
-public class UserController
+@RequestMapping("/wallets")
+public class WalletController implements ApiController
 {
-    private final UserRepository repository;
+    private final WalletService service;
 
-    UserController(UserRepository repository)
+    WalletController(WalletService service)
     {
-        this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<List<User>> readAll()
+    public ResponseEntity<List<Wallet>> readAll()
     {
-        List<User> users = (List<User>) repository.findAll();
+        List<Wallet> Wallets = (List<Wallet>) service.findAll();
 
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(Wallets, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> readById(@PathVariable Integer id)
+    public ResponseEntity<Wallet> readById(@PathVariable Integer id)
     {
-        Optional<User> user = repository.findById(id);
+        Optional<Wallet> Wallet = service.findById(id);
 
-        if (user.isPresent())
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        if (Wallet.isPresent())
+            return new ResponseEntity<>(Wallet.get(), HttpStatus.OK);
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<User> create(@RequestBody User user)
+    public ResponseEntity<Wallet> create(@RequestBody Wallet Wallet)
     {
-        User savedUser = repository.save(user);
+        Wallet savedWallet = service.save(Wallet);
 
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedWallet, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> put(@PathVariable Integer id, @RequestBody User user)
+    public ResponseEntity<Wallet> put(@PathVariable Integer id, @RequestBody Wallet Wallet)
     {
-        boolean existedBefore = repository.existsById(id);
-        user.setId(id);
-        User savedUser = repository.save(user);
+        boolean existedBefore = service.existsById(id);
+        Wallet.setId(id);
+        Wallet savedWallet = service.save(Wallet);
 
         if (!existedBefore)
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+            return new ResponseEntity<>(savedWallet, HttpStatus.CREATED);
         else
-            return new ResponseEntity<>(savedUser, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(savedWallet, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> deleteById(@PathVariable Integer id)
+    public ResponseEntity<Wallet> deleteById(@PathVariable Integer id)
     {
-        repository.deleteById(id);
+        service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
