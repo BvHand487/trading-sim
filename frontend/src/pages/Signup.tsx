@@ -1,26 +1,27 @@
 import { useState } from 'react'
-import { FormControl, TextField, IconButton, InputAdornment, Button, Typography } from '@mui/material'
+import { TextField, IconButton, InputAdornment, Button, Typography } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Link } from 'react-router-dom';
+import { UserCredentials } from '../types/types';
+import { useAuth } from '../components/AuthProvider';
 
 
 function Signup() {
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const auth = useAuth();
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
-  const showPasswordToggle = (event) => { event.preventDefault(); setShowPassword(!showPassword); }
+  const showPasswordToggle = (event: React.SyntheticEvent) => { event.preventDefault(); setShowPassword(!showPassword); }
 
-  const formSubmit = (event) => {
+  const formSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    console.log(`username: ${username}`)
-    console.log(`password: ${password}`)
+    auth.signup(credentials);
   }
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-6 bg-white shadow rounded">
-      <Typography variant="h6"> Sign up </Typography>
+    <div className="mx-auto w-fit mt-24 p-6 bg-white shadow rounded">
+      <Typography variant="h4" className='w-full text-center'>Sign up</Typography>
 
       <form onSubmit={formSubmit}>
         <TextField
@@ -28,8 +29,15 @@ function Signup() {
           label="Username"
           variant="outlined"
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={credentials.username}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            let newCreds: UserCredentials = {
+              username: e.target.value,
+              password: credentials.password
+            }
+
+            setCredentials(newCreds);
+          }}
           required
         />
         <TextField
@@ -37,8 +45,15 @@ function Signup() {
           label="Password"
           variant="outlined"
           margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={credentials.password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            let newCreds: UserCredentials = {
+              username: credentials.username,
+              password: e.target.value
+            }
+
+            setCredentials(newCreds);
+          }}
           required
           type={showPassword ? 'text' : 'password'}
           InputProps={{
@@ -61,8 +76,8 @@ function Signup() {
         <Button type="submit" className='w-full' >Sign up</Button>
       </form>
 
-      <div className="flex flex-row items-center justify-end gap-1">
-        <p className='text-center'> Already have an account? </p>
+      <div className="w-full flex flex-row items-center justify-center">
+        <Typography>Already have an account?</Typography>
         <Link to="/login">
           <Button>
             Log in
