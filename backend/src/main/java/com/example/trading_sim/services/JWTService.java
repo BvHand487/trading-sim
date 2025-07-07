@@ -1,5 +1,6 @@
 package com.example.trading_sim.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,6 +22,8 @@ public class JWTService {
     private String secretKey;
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
+    @Autowired
+    private UserService userService;
 
 
     public String extractUsername(String token) {
@@ -32,24 +35,24 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails credentials) {
-        return generateToken(new HashMap<>(), credentials);
+    public String generateToken(UserDetails details) {
+        return generateToken(new HashMap<>(), details);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails credentials) {
-        return buildToken(extraClaims, credentials, jwtExpiration);
+    public String generateToken(Map<String, Object> extraClaims, UserDetails details) {
+        return buildToken(extraClaims, details, jwtExpiration);
     }
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails credentials,
+            UserDetails details,
             long expiration
 
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(credentials.getUsername())
+                .setSubject(details.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

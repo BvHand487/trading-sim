@@ -1,8 +1,6 @@
 package com.example.trading_sim.controllers;
 
 import com.example.trading_sim.models.User;
-import com.example.trading_sim.repositories.UserRepository;
-import com.example.trading_sim.services.UserService;
 import com.example.trading_sim.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;
@@ -12,9 +10,8 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/users")
-public class UserController implements ApiController
-{
+@RequestMapping("/api/users")
+public class UserController {
     private final UserService service;
 
     UserController(UserService service)

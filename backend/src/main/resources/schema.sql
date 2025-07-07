@@ -7,7 +7,9 @@ create table if not exists users(
 create table if not exists wallets(
     id serial primary key,
     user_id int not null,
-    balance real,
+    name varchar(255) not null,
+    balance real not null,
+    created_at timestamp not null,
 
     foreign key(user_id) references users(id) ON DELETE CASCADE
 );

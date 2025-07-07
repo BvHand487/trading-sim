@@ -1,40 +1,33 @@
 package com.example.trading_sim.controllers;
 
 import com.example.trading_sim.dtos.UserCredentials;
-import com.example.trading_sim.models.User;
 import com.example.trading_sim.services.JWTService;
 import com.example.trading_sim.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-public class AuthController implements ApiController {
+@RequestMapping("/api")
+public class AuthController {
 
     private final JWTService jwtService;
     private final UserService userService;
-    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authManager;
     private final PasswordEncoder encoder;
 
     public AuthController(JWTService jwtService,
                           UserService userService,
-                          UserDetailsService userDetailsService,
                           AuthenticationManager authManager,
                           PasswordEncoder encoder)
     {
         this.jwtService = jwtService;
         this.userService = userService;
-        this.userDetailsService = userDetailsService;
         this.authManager = authManager;
         this.encoder = encoder;
     }

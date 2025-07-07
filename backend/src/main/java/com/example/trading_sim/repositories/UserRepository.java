@@ -20,9 +20,6 @@ public interface UserRepository extends CrudRepository<User, Integer>
     public void deleteByUsername(@Param("username") String username);
     // ...
 
-    @Query("SELECT 1 FROM users WHERE username = :username AND password = :password")
-    public boolean existsByCredentials(@Param("username") String username, @Param("password") String password);
-
     @Query("SELECT COUNT(id) FROM users WHERE username = :username")
     public boolean existsByUsername(@Param("username") String username);
 }

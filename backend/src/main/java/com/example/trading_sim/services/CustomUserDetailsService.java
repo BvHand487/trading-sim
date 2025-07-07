@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService
     {
         Optional<User> user = service.findByUsername(username);
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User Not Found with username: " + username);
         }
 
