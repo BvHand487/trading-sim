@@ -3,12 +3,6 @@ export interface User {
     username: string,
 }
 
-export interface WalletData {
-    name: string,
-    balance: number,
-}
-
-
 export interface UserCredentials {
     username: string,
     password: string,
@@ -23,3 +17,20 @@ export type AuthContextData = {
     logout: Function,
 }
 
+export interface Wallet {
+    id: number,
+    name: string,
+    balance: number,
+    createdAt: Date,
+}
+
+export type WalletContextData = {
+    wallets: Wallet[],
+    selectedWallet: Wallet | null,
+    selectWallet: Function,
+    deselectWallet: Function,
+    addWallet: Function,
+    removeWallet: Function,
+    resetWallet: Function,
+    refreshWallets: Function,
+}

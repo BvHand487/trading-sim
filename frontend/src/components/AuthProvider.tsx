@@ -22,6 +22,8 @@ function AuthProvider({ children }: any) {
     }
   }, []);
 
+  useEffect(() => { console.log("updated token state.", token) }, [token]);
+
   const clearAuthData = () => {
     setIsAuthed(false);
     setUser("");
@@ -30,12 +32,12 @@ function AuthProvider({ children }: any) {
     removeCookie("token");
   }
 
-  const setAuthData = (token: string, username: string) => {
+  const setAuthData = (savedToken: string, savedUsername: string) => {
     setIsAuthed(true);
-    setUser(username);
-    setToken(token);
-    localStorage.setItem("username", username);
-    setCookie("token", token, { path: '/' });
+    setUser(savedUsername);
+    setToken(savedToken);
+    localStorage.setItem("username", savedUsername);
+    setCookie("token", savedToken, { path: '/' });
   }
 
   const login = async (creds: UserCredentials) => {
