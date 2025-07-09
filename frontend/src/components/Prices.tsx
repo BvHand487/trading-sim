@@ -12,8 +12,8 @@ function Prices() {
     const { selectedCurrency } = useCurrencies();
 
     return (
-        <div className='flex flex-row w-full min-h-16 justify-between items-center px-24 overflow-clip'>
-            <div className='w-1/6 flex flex-row gap-2 justify-start'>
+        <div className='flex flex-row w-full min-h-16 justify-between items-center px-[6.5rem] overflow-clip'>
+            <div className='w-[20%] flex flex-row gap-2 justify-start'>
                 {selectedCurrency ?
                     (<>
                         <div className='size-8 shrink-0'>
@@ -57,7 +57,7 @@ function Prices() {
                 <div className='text-xl flex flex-row gap-0'>
                     {selectedCurrency && priceUpdate?.change_pct ? (
                         <>
-                            <div>
+                            <div className='relative bottom-[2.5px]'>
                                 {priceUpdate!.change_pct > 0 ? <NorthIcon className='text-green-500'/> : <SouthIcon  className='text-red-500'/>}
                             </div>
                             <NumericFormat

@@ -78,8 +78,8 @@ function BuySell() {
     };
 
     return (
-        <div className='w-1/3 p-4 h-full'>
-            <Paper sx={{ width: '100%', overflow: 'hidden', padding: 4 }}>
+        <div className='w-[32%] p-4 h-full'>
+            <Paper sx={{ width: '100%', overflow: 'hidden', padding: 4, height: 460 }}>
                 <Stack spacing={3}>
                     <Typography variant="h6" fontWeight="bold">
                         Buy / Sell

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Wallet as WalletType } from '../utils/types';
+import { Currency, Holding, Wallet as WalletType } from '../utils/types';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, TextField, Typography, useTheme } from '@mui/material';
@@ -7,6 +7,8 @@ import { useWallets } from './WalletProvider';
 import { useAuth } from './AuthProvider';
 import { HttpStatusCode } from 'axios';
 import { useCurrencies } from './CurrencyProvider';
+import { formatNumber } from '../utils/functions';
+import { NumericFormat } from 'react-number-format';
 
 function Wallet({ wallet, resetAction, removeAction }: any) {
 
@@ -32,7 +34,7 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
                 setHoldings(data);
             }
         };
-        
+
         fetchHoldings();
     }, [wallet.id]);
 
@@ -44,8 +46,7 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
     }
 
     return (
-        <div className="p-6 bg-white shadow rounded-lg w-full mx-auto space-y-3">
-
+        <div className="p-6 bg-white shadow-[0_1px_4px_rgba(0,0,0,0.15)] rounded-lg w-full mx-auto space-y-3">
             <div className="flex items-center justify-start w-72 gap-2">
                 <AccountBalanceWalletIcon fontSize="large" className='text-blue-500' />
 
@@ -57,8 +58,7 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
                         onKeyDown={(e) => {
                             if (e.key == 'Enter')
                                 submitName();
-                            else if (e.key == 'Escape')
-                            {
+                            else if (e.key == 'Escape') {
                                 setTempName(wallet.name);
                                 setIsEditingName(false);
                             }
@@ -102,23 +102,36 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
                     <span className="font-medium">Created:</span>
                     <span>{new Date(wallet.createdAt).toLocaleDateString()}</span>
                 </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Holdings:</span>
+                    {holdings.length == 0 && <span>---</span>}
+                </div>
             </div>
 
-            <div className="mt-4">
-            <Typography variant="subtitle2" className="font-semibold mb-2">Holdings</Typography>
-            {holdings.length === 0 ? (
-                <Typography variant="body2" color="textSecondary">No holdings</Typography>
-            ) : (
-                <div className="text-sm space-y-1 max-h-40 overflow-y-auto">
-                {holdings.map((h: any) => (
-                    <div key={h.currencyId} className="flex justify-between">
-                    <span>{h.walletId}</span>
-                    <span>{h.amount.toFixed(6)}</span>
-                    </div>
-                ))}
+            {holdings.length > 0 && (
+                <div className="text-sm space-y-2 max-h-40 overflow-y-auto ml-4">
+                    {holdings.map((h: Holding) => {
+                        const currency: Currency = currencies.find(c => c.id === h.currencyId)!;
+
+                        return (
+                            <div key={h.id} className="flex justify-between w-full">
+                                <span>-&nbsp;&nbsp;</span>
+                                <div className='flex flex-row gap-1'>
+                                    <div className='size-6'>
+                                        <img src={currency.logoUrl}></img>
+                                    </div>
+                                    <span className='text-left font-semibold text-gray-900'>{currency.symbol}</span>
+                                    <span className='text-right flex-1 font-light text-gray-500'>{currency.name}</span>
+                                </div>
+                                <NumericFormat className='text-right text-sm text-gray-700 flex-1'
+                                    value={formatNumber(h.amount)}
+                                    displayType={'text'}
+                                    thousandSeparator={true} />
+                            </div>
+                        );
+                    })}
                 </div>
             )}
-            </div>
 
             <div>
                 <Button

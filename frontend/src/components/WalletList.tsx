@@ -10,8 +10,8 @@ function WalletList() {
     const { wallets, addWallet, removeWallet, resetWallet } = useWallets();
 
     return (
-        <div className="max-w-md p-4">
-            <div className="h-[86vh] flex flex-col justify-start items-start overflow-y-auto gap-3">
+        <div className="max-w-md">
+            <div className="pl-4 pr-2 pt-2 h-[89vh] flex flex-col justify-start items-start overflow-y-auto overflow-visible gap-2">
                 {wallets && wallets.map((wallet: WalletType) => <Wallet
                     key={wallet.id}
                     wallet={wallet}

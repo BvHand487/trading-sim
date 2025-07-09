@@ -114,7 +114,11 @@ public class TransactionController {
         }
 
         walletService.save(wallet);
-        holdingService.save(holding);
+
+        if (Math.abs(holding.getAmount()) < 1e-8f)
+            holdingService.deleteAllByWalletId(wallet.getId());
+        else
+            holdingService.save(holding);
 
         transaction.setId(null);
         transaction.setCreatedAt(Date.from(Instant.now()));

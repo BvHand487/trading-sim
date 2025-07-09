@@ -95,9 +95,9 @@ function Chart() {
 
       const timestamp = new Date().toLocaleTimeString();
 
-      // max 50 points
-      setChartLabels(prev => [...prev.slice(-49), timestamp]);
-      setChartData(prev => [...prev.slice(-49), priceUpdate.last]);
+      // max 200 points
+      setChartLabels(prev => [...prev.slice(-199), timestamp]);
+      setChartData(prev => [...prev.slice(-199), priceUpdate.last]);
     }
   }, [priceUpdate])
 
@@ -115,7 +115,7 @@ function Chart() {
   };
 
   return (
-    <div className="flex items-start justify-center mx-auto w-[96%] min-w-0">
+    <div className="flex items-start justify-center mx-auto w-[96%] min-w-0 relative right-8">
       <div className="h-[30vh] w-[96%]">
         <Line options={options} data={data} />
       </div>

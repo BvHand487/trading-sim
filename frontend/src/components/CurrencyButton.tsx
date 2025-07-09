@@ -27,13 +27,9 @@ function CurrencyButton({ currency }: any) {
                 cursor: 'pointer',
                 color: 'black'
             }}>
-                <div className='size-6'>
-                    <img src={currency.logoUrl}></img>
-                </div>
-                <span className='text-left font-semibold text-gray-900'>{currency.symbol}</span>
-                <span className='text-right flex-1 font-light text-gray-500'>{currency.name}</span>
+                <Currency currency={currency}/>
         </Button>
     )
 }
 
-export default Currency
+export default CurrencyButton

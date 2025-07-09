@@ -69,3 +69,10 @@ export interface Transaction {
     price: number,
     createdAt: Date,
 }
+
+export interface Holding {
+    id: number,
+    amount: number,
+    walletId: number,
+    currencyId: number,
+}
