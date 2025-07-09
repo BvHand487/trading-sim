@@ -1,7 +1,6 @@
 # trading-sim
 Cryptocurrency trading simulator made with React.js, Sprint Boot and PostgreSQL.
 <br/>
-<br/>
 
 ## 🚀 Running localy
 #### 1. Clone the repository:
