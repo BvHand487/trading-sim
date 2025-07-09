@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { useState, useContext, createContext } from "react";
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import { AuthContextData, UserCredentials } from '../types/types';
+import { AuthContextData, UserCredentials } from '../utils/types';
+import { Box, CircularProgress } from '@mui/material';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -10,6 +11,7 @@ function AuthProvider({ children }: any) {
   const [isAuthed, setIsAuthed] = useState(false);
   const [user, setUser] = useState("");
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true);
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
@@ -20,9 +22,11 @@ function AuthProvider({ children }: any) {
     if (savedToken && savedUsername) {
       setAuthData(savedToken, savedUsername);
     }
+
+    setLoading(false);
   }, []);
 
-  useEffect(() => { console.log("updated token state.", token) }, [token]);
+  useEffect(() => { token; }, [token]);
 
   const clearAuthData = () => {
     setIsAuthed(false);
@@ -79,6 +83,13 @@ function AuthProvider({ children }: any) {
     signup: signup,
     logout: logout
   };
+
+  if (loading)
+    return (
+      <div className='fixed top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2'>
+        <CircularProgress />
+      </div>
+    );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -21,4 +21,10 @@ public interface WalletRepository extends CrudRepository<Wallet, Integer>
 
     @Query("SELECT COUNT(id) FROM wallets WHERE id = :id AND user_id = :userId")
     public boolean existsByIdAndUserId(@Param("id") Integer id, @Param("userId") Integer userId);
+
+    @Query("SELECT COUNT(id) FROM wallets WHERE name = :name AND user_id = :userId")
+    public boolean existsByNameAndUsedId(@Param("name") String name, @Param("userId") Integer userId);
+
+    @Query("SELECT COUNT(id) FROM wallets WHERE user_id = :userId")
+    public Integer countByUserId(@Param("userId") Integer userId);
 }

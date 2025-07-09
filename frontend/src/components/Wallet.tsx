@@ -1,27 +1,96 @@
-import React from 'react'
-import { Wallet as WalletType } from '../types/types';
+import React, { useEffect, useState } from 'react'
+import { Wallet as WalletType } from '../utils/types';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Typography, useTheme } from '@mui/material';
+import { Button, TextField, Typography, useTheme } from '@mui/material';
+import { useWallets } from './WalletProvider';
+import { useAuth } from './AuthProvider';
+import { HttpStatusCode } from 'axios';
+import { useCurrencies } from './CurrencyProvider';
 
 function Wallet({ wallet, resetAction, removeAction }: any) {
-    
-    return (
-        <div className="p-6 bg-white shadow rounded-lg w-full max-w-96 mx-auto space-y-3">
 
-            <div className="flex items-center gap-4">
+    const { token } = useAuth();
+    const { wallets, renameWallet } = useWallets();
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [tempName, setTempName] = useState(wallet.name);
+    const [holdings, setHoldings] = useState<any>([]);
+    const { currencies } = useCurrencies();
+
+
+    useEffect(() => {
+        const fetchHoldings = async () => {
+            const response = await fetch(`http://localhost:8080/api/wallets/${wallet.id}/holdings`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.status == HttpStatusCode.Ok) {
+                const data = await response.json();
+                setHoldings(data);
+            }
+        };
+        
+        fetchHoldings();
+    }, [wallet.id]);
+
+
+    const submitName = async () => {
+
+        await renameWallet(wallet.id, tempName);
+        setIsEditingName(false);
+    }
+
+    return (
+        <div className="p-6 bg-white shadow rounded-lg w-full mx-auto space-y-3">
+
+            <div className="flex items-center justify-start w-72 gap-2">
                 <AccountBalanceWalletIcon fontSize="large" className='text-blue-500' />
-                <Typography variant="h6" className="font-semibold flex-1">
-                    {wallet.name}
-                </Typography>
-                <Button
-                    onClick={() => removeAction(wallet.id)}
-                >
-                    <DeleteIcon
-                        fontSize="medium"
-                        className='text-blue-500'
+
+                {isEditingName ? (
+                    <TextField
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        onBlur={submitName}
+                        onKeyDown={(e) => {
+                            if (e.key == 'Enter')
+                                submitName();
+                            else if (e.key == 'Escape')
+                            {
+                                setTempName(wallet.name);
+                                setIsEditingName(false);
+                            }
+                        }}
+                        autoFocus
+                        size="small"
+                        variant="standard"
+                        sx={{ flex: 1 }}
                     />
-                </Button>
+                ) : (
+                    <Typography
+                        variant="h6"
+                        className="font-semibold flex-1 cursor-pointer"
+                        onDoubleClick={() => setIsEditingName(true)}
+                    >
+                        {wallet.name}
+                    </Typography>
+                )}
+
+                {wallets.length > 1 && (
+                    <Button onClick={() => removeAction(wallet.id)}
+                        sx={{
+                            padding: 0,
+                            margin: 0,
+                            height: '100%',
+                            minWidth: 0,
+                        }}>
+                        <DeleteIcon
+                            fontSize="medium"
+                            className='text-blue-500 w-4'
+                        />
+                    </Button>)}
             </div>
 
             <div className="space-y-1 text-sm text-gray-700">
@@ -35,6 +104,22 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
                 </div>
             </div>
 
+            <div className="mt-4">
+            <Typography variant="subtitle2" className="font-semibold mb-2">Holdings</Typography>
+            {holdings.length === 0 ? (
+                <Typography variant="body2" color="textSecondary">No holdings</Typography>
+            ) : (
+                <div className="text-sm space-y-1 max-h-40 overflow-y-auto">
+                {holdings.map((h: any) => (
+                    <div key={h.currencyId} className="flex justify-between">
+                    <span>{h.walletId}</span>
+                    <span>{h.amount.toFixed(6)}</span>
+                    </div>
+                ))}
+                </div>
+            )}
+            </div>
+
             <div>
                 <Button
                     variant="outlined"
@@ -42,7 +127,7 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
                     onClick={() => resetAction(wallet.id)}
                     fullWidth
                 >
-                    Reset Balance
+                    Reset Wallet
                 </Button>
             </div>
         </div>

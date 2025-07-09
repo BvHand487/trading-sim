@@ -12,8 +12,6 @@ function HeaderActions() {
 
     }, [auth.isAuthed]);
 
-    console.log(auth);
-
     if (auth.isAuthed) {
         return (
             <Link to="/">

@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { Wallet, WalletContextData } from '../types/types';
-import { EmptyObject } from 'chart.js/dist/types/basic';
+import { createContext, useContext, useEffect, useState } from 'react'
+import { Transaction, Wallet, WalletContextData } from '../utils/types';
 import { useAuth } from './AuthProvider';
+import { HttpStatusCode } from 'axios';
 
 
 const WalletContext = createContext<WalletContextData>({} as WalletContextData);
@@ -12,9 +12,24 @@ function WalletProvider({ children }: any) {
     const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
 
     useEffect(() => {
-        if (token)
-            refreshWallets();
-    }, [token]);
+        const refreshWallets = async () => {
+            const response = await fetch("http://localhost:8080/api/wallets", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json() as Wallet[];
+            console.log('refreshWallets: ', data);
+
+            setWallets(data);
+        }
+
+        refreshWallets();
+
+    }, []);
 
     const addWallet = async () => {
         let wallet: Wallet = {} as Wallet;
@@ -32,10 +47,10 @@ function WalletProvider({ children }: any) {
             body: JSON.stringify(wallet),
         });
 
-        const data = await response.json() as Wallet;
-        console.log('addWallet: ', data);
-
-        setWallets([...wallets, data]);
+        if (response.status == HttpStatusCode.Created) {
+            const data = await response.json() as Wallet;
+            setWallets([...wallets, data]);
+        }
     }
 
     const removeWallet = async (id: number) => {
@@ -49,15 +64,15 @@ function WalletProvider({ children }: any) {
             },
         });
 
-        console.log('removeWallet');
-
-        setWallets(wallets.filter(w => w.id != id));
+        if (response.status == HttpStatusCode.NoContent) {
+            setWallets(wallets.filter(w => w.id != id));
+        }
     }
 
-    const resetWallet = async (id: number) => {
+    const renameWallet = async (id: number, newName: string) => {
         let wallet = wallets.find(w => w.id == id)!;
 
-        wallet.balance = 10000  // move to backend maybe
+        wallet.name = newName;
 
         const response = await fetch(`http://localhost:8080/api/wallets/${id}`, {
             method: "PATCH",
@@ -65,12 +80,35 @@ function WalletProvider({ children }: any) {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({ balance: wallet.balance }),
+            body: JSON.stringify({ name: wallet.name }),
         });
 
-        console.log('resetWallet');
+        if (response.status == HttpStatusCode.Ok) {
+            setWallets(wallets.map(w => w.id === id ? { ...w, name: newName } : w));
+        }
+    }
 
-        setWallets(wallets.map(w => w.id === id ? { ...w, balance: 10000 } : w));
+    const resetWallet = async (id: number) => {
+        const response = await fetch(`http://localhost:8080/api/wallets/${id}/reset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        });
+
+        if (response.status == HttpStatusCode.Ok) {
+            setWallets(wallets.map(w => w.id === id ? { ...w, balance: 10000 } : w));
+        }
+    }
+
+    const updateFromTransaction = async (transaction: Transaction) => {
+        setWallets(
+            wallets.map(w => w.id === transaction.walletId ?
+                { ...w, balance: w.balance - transaction.quantity * transaction.price }
+                : w
+            )
+        );
     }
 
     const selectWallet = async (id: number) => {
@@ -82,21 +120,6 @@ function WalletProvider({ children }: any) {
         setSelectedWallet(null);
     }
 
-    const refreshWallets = async () => {
-        const response = await fetch("http://localhost:8080/api/wallets", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json() as Wallet[];
-        console.log('refreshWallets: ', data);
-
-        setWallets(data);
-    }
-
     const value: WalletContextData = {
         wallets: wallets,
         selectedWallet: selectedWallet,
@@ -104,8 +127,9 @@ function WalletProvider({ children }: any) {
         deselectWallet: deselectWallet,
         addWallet: addWallet,
         removeWallet: removeWallet,
+        renameWallet: renameWallet,
         resetWallet: resetWallet,
-        refreshWallets: refreshWallets,
+        updateFromTransaction: updateFromTransaction,
     };
 
     return (

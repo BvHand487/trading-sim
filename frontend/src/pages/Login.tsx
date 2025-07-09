@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { TextField, IconButton, InputAdornment, Button, Typography } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Link } from 'react-router-dom';
-import { AuthContextData, UserCredentials } from '../types/types';
+import { AuthContextData, UserCredentials } from '../utils/types';
 import { useAuth } from '../components/AuthProvider';
 
 

@@ -8,6 +8,10 @@ import { CookiesProvider } from 'react-cookie';
 import Landing from './pages/Landing';
 import { ThemeProvider, useTheme } from '@emotion/react';
 import { createTheme } from '@mui/material';
+import CurrencyProvider from './components/CurrencyProvider';
+import WalletProvider from './components/WalletProvider';
+import PriceProvider from './components/PriceProvider';
+import ProtectedRoute from './components/ProtectedRoute';
 
 declare module '@mui/material/styles'
 {
@@ -41,19 +45,32 @@ function App() {
       <CookiesProvider>
         <AuthProvider>
           <ThemeProvider theme={theme}>
-            <Header />
-            <div className='flex-1 flex flex-col'>
-              <Routes>
-                <Route path='/' element={<Landing />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/signup' element={<Signup />} />
-                <Route path='/home' element={<Home />} />
-              </Routes>
-            </div>
-          </ThemeProvider>
-        </AuthProvider>
-      </CookiesProvider>
-    </BrowserRouter>
+            <WalletProvider>
+              <CurrencyProvider>
+                <PriceProvider>
+                  <Header />
+                  <div className='flex-1 flex flex-col'>
+                    <Routes>
+                      <Route path='/' element={<Landing />} />
+                      <Route path='/login' element={<Login />} />
+                      <Route path='/signup' element={<Signup />} />
+                      <Route
+                        path="/home"
+                        element={
+                          <ProtectedRoute>
+                            <Home />
+                          </ProtectedRoute>
+                        }
+                      />
+                    </Routes>
+                  </div>
+                </PriceProvider>
+              </CurrencyProvider>
+            </WalletProvider>
+          </ThemeProvider >
+        </AuthProvider >
+      </CookiesProvider >
+    </BrowserRouter >
   )
 }
 

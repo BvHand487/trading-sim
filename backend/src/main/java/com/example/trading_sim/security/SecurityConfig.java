@@ -70,7 +70,7 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers("/api/login", "/api/signup").permitAll()
+                        requests.requestMatchers("/api/login", "/api/signup", "/api/currencies").permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().permitAll()
                 )
