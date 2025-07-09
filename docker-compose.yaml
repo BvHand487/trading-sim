@@ -1,33 +1,52 @@
+version: '3.8'
+
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - 5173:5173
+    networks:
+      - container
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    networks:
+      - container
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+      SPRING_SQL_INIT_MODE: always
+    
   db:
     image: postgres:latest
-    networks:
-      - backend
     ports:
       - 5432:5432
+    networks:
+      - container
 
-    restart: always
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
       - POSTGRES_DB=db
-
-    # volumes:
-    #   - ./database:/docker-entrypoint-initdb.d/
-
+    restart: always
     
   adminer:
     image: adminer:latest
-    networks:
-      - backend
-    ports:
-      - 8081:8080
-
-    restart: always
-
     depends_on:
       - db
+    ports:
+      - 8081:8080
+    networks:
+      - container
+    restart: always
+
 
 networks:
-  backend:
+  container:
     driver: bridge

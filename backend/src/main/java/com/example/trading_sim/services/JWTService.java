@@ -22,9 +22,6 @@ public class JWTService {
     private String secretKey;
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
-    @Autowired
-    private UserService userService;
-
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
