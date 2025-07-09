@@ -8,9 +8,7 @@ function HeaderActions() {
     const auth = useAuth();
     const theme = useTheme();
 
-    useEffect(() => {
-
-    }, [auth.isAuthed]);
+    useEffect(() => { }, [auth.isAuthed]);
 
     if (auth.isAuthed) {
         return (

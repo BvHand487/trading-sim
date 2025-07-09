@@ -18,6 +18,10 @@ public interface HoldingRepository extends CrudRepository<Holding, Integer>
     public List<Holding> findAllByWalletId(@Param("walletId") Integer walletId);
 
     @Modifying
+    @Query("DELETE FROM holdings WHERE wallet_id = :walletId AND currency_id = :currencyId")
+    public void deleteByWalletIdAndCurrencyId(@Param("walletId") Integer walletId, @Param("currencyId") Integer currencyId);
+
+    @Modifying
     @Query("DELETE FROM holdings WHERE wallet_id = :walletId")
     public void deleteAllByWalletId(@Param("walletId") Integer walletId);
 

@@ -23,6 +23,10 @@ public class HoldingService {
         return repository.findAllByWalletId(walletId);
     }
 
+    public void deleteByWalletIdAndCurrencyId(Integer walletId, Integer currencyId) {
+        repository.deleteByWalletIdAndCurrencyId(walletId, currencyId);
+    }
+
     public void deleteAllByWalletId(Integer walletId) {
         repository.deleteAllByWalletId(walletId);
     }

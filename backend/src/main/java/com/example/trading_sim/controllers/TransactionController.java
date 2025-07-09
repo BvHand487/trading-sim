@@ -59,6 +59,11 @@ public class TransactionController {
         return new ResponseEntity<>(transaction.get(), HttpStatus.OK);
     }
 
+
+    /*
+    Handles a "BUY" or "SELL" action by the user.
+    Doesnt verify prices for now.
+    */
     @PostMapping
     @ResponseBody
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction, @AuthenticationPrincipal UserDetails details) {
@@ -116,7 +121,7 @@ public class TransactionController {
         walletService.save(wallet);
 
         if (Math.abs(holding.getAmount()) < 1e-8f)
-            holdingService.deleteAllByWalletId(wallet.getId());
+            holdingService.deleteByWalletIdAndCurrencyId(wallet.getId(), transaction.getCurrencyId());
         else
             holdingService.save(holding);
 

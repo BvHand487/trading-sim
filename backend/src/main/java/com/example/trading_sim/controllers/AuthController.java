@@ -1,5 +1,6 @@
 package com.example.trading_sim.controllers;
 
+import com.example.trading_sim.dtos.JsonError;
 import com.example.trading_sim.dtos.UserCredentials;
 import com.example.trading_sim.services.JWTService;
 import com.example.trading_sim.services.UserService;
@@ -51,12 +52,12 @@ public class AuthController {
     {
         if (userService.existsByUsername(credentials.getUsername()))
         {
-            return new ResponseEntity<>("Username taken!", HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new JsonError("Username taken!"), HttpStatus.CONFLICT);
         }
 
         credentials.setPassword(encoder.encode(credentials.getPassword()));  // hash password
         userService.createUserWithWallet(credentials);
 
-        return new ResponseEntity<>("User created!", HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

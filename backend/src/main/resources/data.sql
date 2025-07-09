@@ -1,3 +1,5 @@
+-- hard coded for now
+
 INSERT INTO currencies (symbol, name, logo_url)
 SELECT * FROM (
     SELECT 'BTC', 'Bitcoin', 'https://img.cryptorank.io/coins/60x60.bitcoin1524754012028.png'

@@ -97,8 +97,10 @@ function WalletProvider({ children }: any) {
             },
         });
 
-        if (response.status == HttpStatusCode.Ok) {
-            setWallets(wallets.map(w => w.id === id ? { ...w, balance: 10000 } : w));
+        if (response.status === HttpStatusCode.Ok) {
+            setWallets(prev =>
+                prev.map(w => w.id === id ? { ...w, balance: 10000 } : w)
+            );
         }
     }
 

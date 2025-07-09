@@ -36,7 +36,7 @@ function Wallet({ wallet, resetAction, removeAction }: any) {
         };
 
         fetchHoldings();
-    }, [wallet.id]);
+    }, []);
 
 
     const submitName = async () => {

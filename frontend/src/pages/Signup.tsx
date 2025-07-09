@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TextField, IconButton, InputAdornment, Button, Typography } from '@mui/material'
+import { TextField, IconButton, InputAdornment, Button, Typography, CircularProgress } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Link } from 'react-router-dom';
 import { UserCredentials } from '../utils/types';
@@ -20,70 +20,78 @@ function Signup() {
   }
 
   return (
-    <div className="mx-auto w-fit mt-24 p-6 bg-white shadow rounded">
-      <Typography variant="h4" className='w-full text-center'>Sign up</Typography>
+    <div className='flex flex-col'>
+      <div className="mx-auto w-fit mt-24 p-6 bg-white shadow rounded">
+        <Typography variant="h4" className='w-full text-center'>Sign up</Typography>
 
-      <form onSubmit={formSubmit}>
-        <TextField
-          fullWidth
-          label="Username"
-          variant="outlined"
-          margin="normal"
-          value={credentials.username}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            let newCreds: UserCredentials = {
-              username: e.target.value,
-              password: credentials.password
-            }
+        <form onSubmit={formSubmit}>
+          <TextField
+            fullWidth
+            label="Username"
+            variant="outlined"
+            margin="normal"
+            value={credentials.username}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              let newCreds: UserCredentials = {
+                username: e.target.value,
+                password: credentials.password
+              }
 
-            setCredentials(newCreds);
-          }}
-          required
-        />
-        <TextField
-          fullWidth
-          label="Password"
-          variant="outlined"
-          margin="normal"
-          value={credentials.password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            let newCreds: UserCredentials = {
-              username: credentials.username,
-              password: e.target.value
-            }
+              setCredentials(newCreds);
+            }}
+            required
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            variant="outlined"
+            margin="normal"
+            value={credentials.password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              let newCreds: UserCredentials = {
+                username: credentials.username,
+                password: e.target.value
+              }
 
-            setCredentials(newCreds);
-          }}
-          required
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
-                  }
-                  onClick={showPasswordToggle}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+              setCredentials(newCreds);
+            }}
+            required
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={
+                      showPassword ? 'hide the password' : 'display the password'
+                    }
+                    onClick={showPasswordToggle}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
-        <Button type="submit" className='w-full' >Sign up</Button>
-      </form>
+          <Button type="submit" className='w-full' >Sign up</Button>
+        </form>
 
-      <div className="w-full flex flex-row items-center justify-center">
-        <Typography>Already have an account?</Typography>
-        <Link to="/login">
-          <Button>
-            Log in
-          </Button>
-        </Link>
+        <div className="w-full flex flex-row items-center justify-center">
+          <Typography>Already have an account?</Typography>
+          <Link to="/login">
+            <Button>
+              Log in
+            </Button>
+          </Link>
+        </div>
       </div>
+      {auth.isLoading ?
+        (<CircularProgress />) :
+        (
+          <span className='w-full text-center content-center pt-6 text-red-500'>{auth.error}</span>
+        )}
+
     </div>
   )
 }

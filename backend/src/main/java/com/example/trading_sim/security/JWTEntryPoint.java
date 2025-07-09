@@ -1,5 +1,7 @@
 package com.example.trading_sim.security;
 
+import com.example.trading_sim.dtos.JsonError;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +20,8 @@ public class JWTEntryPoint implements AuthenticationEntryPoint
     {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
+
+        var jsonResponse = new JsonError("Invalid or expired token");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(jsonResponse));
     }
 }

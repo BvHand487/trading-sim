@@ -15,6 +15,8 @@ export type AuthContextData = {
     login: Function,
     signup: Function,
     logout: Function,
+    isLoading: boolean,
+    error: string | null,
 }
 
 export interface Wallet {

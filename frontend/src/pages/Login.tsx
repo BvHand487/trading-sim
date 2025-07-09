@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TextField, IconButton, InputAdornment, Button, Typography } from '@mui/material'
+import { TextField, IconButton, InputAdornment, Button, Typography, CircularProgress } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Link } from 'react-router-dom';
 import { AuthContextData, UserCredentials } from '../utils/types';
@@ -20,7 +20,8 @@ function Login() {
     }
 
     return (
-        <div className="mx-auto w-fit mt-24 p-6 bg-white shadow rounded">
+        <div className='flex flex-col'>
+            <div className="mx-auto w-fit mt-24 p-6 bg-white shadow rounded">
             <Typography variant="h4" className='w-full text-center'>Log in</Typography>
 
             <form onSubmit={formSubmit}>
@@ -84,6 +85,13 @@ function Login() {
                     </Button>
                 </Link>
             </div>
+        </div>
+        {auth.isLoading ?
+        (<CircularProgress />) :
+        (
+            <span className='w-full text-center content-center pt-6 text-red-500'>{auth.error}</span>
+        )}
+        
         </div>
     )
 }

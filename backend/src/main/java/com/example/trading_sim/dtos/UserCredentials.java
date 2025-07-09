@@ -1,5 +1,9 @@
 package com.example.trading_sim.dtos;
 
+
+/*
+Represents user credentials during log ins and sign ups
+*/
 public class UserCredentials
 {
     private String username;
