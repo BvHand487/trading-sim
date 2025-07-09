@@ -2,7 +2,7 @@
 Cryptocurrency trading simulator made with React.js, Sprint Boot and PostgreSQL.
 <br/>
 
-## 🚀 Running localy
+## 🚀 Running locally
 #### 1. Clone the repository:
 
 ```bash
