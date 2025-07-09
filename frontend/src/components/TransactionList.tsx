@@ -55,7 +55,7 @@ function TransactionList() {
                         <TableBody>
                             {transactions
                                 .filter((tx: Transaction) => tx.currencyId == selectedCurrency!.id)
-                                .sort((tx1: Transaction, tx2: Transaction) => new Date(tx1.createdAt).getTime() - new Date(tx2.createdAt).getTime())
+                                .sort((tx1: Transaction, tx2: Transaction) => new Date(tx2.createdAt).getTime() - new Date(tx1.createdAt).getTime())
                                 .map((tx: Transaction) => (
                                     <TableRow key={tx.id}>
                                         <TableCell>

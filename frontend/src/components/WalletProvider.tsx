@@ -105,9 +105,10 @@ function WalletProvider({ children }: any) {
     }
 
     const updateFromTransaction = async (transaction: Transaction) => {
+        const total = transaction.quantity * transaction.price;
         setWallets(
             wallets.map(w => w.id === transaction.walletId ?
-                { ...w, balance: w.balance - transaction.quantity * transaction.price }
+                { ...w, balance: (transaction.type == 'BUY' ? w.balance - total : w.balance + total) }
                 : w
             )
         );
