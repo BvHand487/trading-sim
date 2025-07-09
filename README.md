@@ -21,8 +21,60 @@ docker-compose up --build
 * Backend API - ```http://localhost:8080/api```
 * Database Admin (adminer) - ```http://localhost:8081```
 
+
 ## 📷 Screenshots
+
+<table>
+  <tr>
+    <td>
+      <img src="assets/homepage.png?v=2" width="300" />
+    </td>
+    <td>
+      <strong>Home page</strong><br/>
+      Overview of all currencies and wallets.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/buysell.png?v=2" width="300" />
+    </td>
+    <td>
+      <strong>Buy/Sell</strong><br/>
+      Allows the user to specify from which wallet to buy/sell from and how much currency.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/updated.png?v=2" width="300" />
+    </td>
+    <td>
+      <strong>Update after Buy/Sell</strong><br/>
+      The wallet balance and holdings have changed. A transaction is added.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/login.png?v=2" width="300" />
+    </td>
+    <td>
+      <strong>Log in</strong><br/>
+        User authentication with tokens.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/landing.png?v=2" width="300" />
+    </td>
+    <td>
+      <strong>Landing page</strong><br/>
+        Simple landing page with links to the home page and log in page.
+    </td>
+  </tr>
+</table>
+
+## 🎥 Video
 ...
+
 
 ## 🔮 Future Improvements
 * Price validation for every transaction (right now the websocket is connected to the frontend for visual updates only)
